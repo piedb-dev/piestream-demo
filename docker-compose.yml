@@ -6,15 +6,15 @@ services:
     command:
       - compactor-node
       - "--host"
-      - "0.0.0.0:6660"
+      - "0.0.0.0:5908"
       - "--prometheus-listener-addr"
-      - "0.0.0.0:1260"
+      - "0.0.0.0:2487"
       - "--metrics-level"
       - "1"
       - "--state-store"
-      - "hummock+minio://hummockadmin:hummockadmin@minio-0:9301/hummock001"
+      - "hummock+minio://hummockadmin:hummockadmin@minio-0:3253/hummock001"
       - "--meta-address"
-      - "http://meta-node-0:5690"
+      - "http://meta-node-0:2463"
     depends_on:
       - meta-node-0
       - minio-0
@@ -24,17 +24,17 @@ services:
     command:
       - compute-node
       - "--host"
-      - "0.0.0.0:5688"
+      - "0.0.0.0:9945"
       - "--prometheus-listener-addr"
-      - "0.0.0.0:1222"
+      - "0.0.0.0:2487"
       - "--client-address"
-      - "compute-node-0:5688"
+      - "compute-node-0:9945"
       - "--metrics-level"
       - "1"
       - "--meta-address"
-      - "http://meta-node-0:5690"
+      - "http://meta-node-0:2463"
       - "--state-store"
-      - "hummock+minio://hummockadmin:hummockadmin@minio-0:9301/hummock001"
+      - "hummock+minio://hummockadmin:hummockadmin@minio-0:3253/hummock001"
     depends_on:
       - meta-node-0
       - minio-0
@@ -44,17 +44,17 @@ services:
     command:
       - compute-node
       - "--host"
-      - "0.0.0.0:5688"
+      - "0.0.0.0:9945"
       - "--prometheus-listener-addr"
-      - "0.0.0.0:1222"
+      - "0.0.0.0:2487"
       - "--client-address"
-      - "compute-node-1:5688"
+      - "compute-node-1:9945"
       - "--metrics-level"
       - "1"
       - "--meta-address"
-      - "http://meta-node-0:5690"
+      - "http://meta-node-0:2463"
       - "--state-store"
-      - "hummock+minio://hummockadmin:hummockadmin@minio-0:9301/hummock001"
+      - "hummock+minio://hummockadmin:hummockadmin@minio-0:3253/hummock001"
     depends_on:
       - meta-node-0
       - minio-0
@@ -64,11 +64,11 @@ services:
     command:
       - frontend-node
       - "--host"
-      - "0.0.0.0:4566"
+      - "0.0.0.0:5373"
       - "--meta-addr"
-      - "http://meta-node-0:5690"
+      - "http://meta-node-0:2463"
     ports:
-      - 4566:4566
+      - 5373:5373
     depends_on:
       - meta-node-0
 
@@ -82,9 +82,9 @@ services:
     command:
       - server
       - "--address"
-      - "0.0.0.0:9301"
+      - "0.0.0.0:3253"
       - "--console-address"
-      - "0.0.0.0:9400"
+      - "0.0.0.0:6863"
       - /data
     volumes:
       - minio-data:/data
@@ -98,13 +98,13 @@ services:
     command:
       - meta-node
       - "--listen-addr"
-      - "0.0.0.0:5690"
+      - "0.0.0.0:2463"
       - "--host"
       - "meta-node-0"
       - "--dashboard-host"
-      - "0.0.0.0:5691"
+      - "0.0.0.0:1133"
       - "--prometheus-host"
-      - "0.0.0.0:1250"
+      - "0.0.0.0:2487"
       - "--backend"
       - etcd
       - "--etcd-endpoints"
@@ -184,14 +184,14 @@ services:
   load-view:
     image: postgres:14-alpine
     profiles: ['_']
-    entrypoint: psql -h frontend-node-0 -p 4566 -d dev -U root -f /ctr.sql
+    entrypoint: psql -h frontend-node-0 -p 5373 -d dev -U root -f /ctr.sql
     volumes:
       - ./ctr.sql:/ctr.sql
 
   psql:
     image: postgres:14-alpine
     profiles: ['_']
-    entrypoint: psql -h frontend-node-0 -p 4566 -d dev -U root
+    entrypoint: psql -h frontend-node-0 -p 5373 -d dev -U root
 
   prometheus:
     image: prom/prometheus:v2.36.0
