@@ -23,13 +23,51 @@ docker-compose up -d
 
 若启动无误，
 - frontend服务将在5373端口监听
-- kafka服务将在9092端口监听
 - promethus服务将在9500端口监听
 - grafana服务将在3000端口监听
 
-**通过psql执行查询语句**
+**连接 piestream**
 ```bash
 docker-compose run psql
+```
+
+**创建视图**
+```sql
+-- 基本语法
+CREATE [MATERIALIZED] SOURCE [IF NOT EXISTS] source_name (
+   column_name data_type,...
+)
+WITH (
+   connector='kafka',
+   field_name='value', ...
+)
+ROW FORMAT JSON;
+-- 示例
+CREATE MATERIALIZED SOURCE IF NOT EXISTS my_source (
+   field1 varchar,
+   field2 bigint,
+)
+WITH (
+   connector='kafka',
+   kafka.topic='test_topic',
+   kafka.brokers='10.0.0.1:9092,10.0.0.2:9092',
+   kafka.scan.startup.mode='latest'
+)
+ROW FORMAT JSON;
+```
+其中`kafka.scan.startup.mode`用于指定 piestream 应当从消息队列头部还是尾部开始扫描，默认取值为`earliest`，其他可选取值为`latest`。
+
+**创建视图**
+```sql
+-- 基本语法
+CREATE MATERIALIZED VIEW <mv> AS <select_query>;
+-- 示例
+CREATE MATERIALIZED VIEW last_mv AS SELECT * FROM my_source ORDER BY id DESC LIMIT 100000;
+```
+
+**查询视图**
+```sql
+SELECT * FROM last_mv LIMIT 5;
 ```
 
 **停止所有服务并清空相关磁盘占用**

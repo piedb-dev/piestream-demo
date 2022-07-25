@@ -6,7 +6,7 @@ datasources:
   - name: piedev-prometheus
     type: prometheus
     access: proxy
-    url: http://prometheus:9500
+    url: http://localhost:9500
     withCredentials: false
     isDefault: true
     tlsAuth: false

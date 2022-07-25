@@ -5,7 +5,7 @@ CREATE SOURCE ad_exposure (
 ) WITH (
     'connector' = 'kafka',
     'kafka.topic' = 'ad_exposure',
-    'kafka.brokers' = 'kafka:29092',
+    'kafka.brokers' = 'localhost:9092',
     'kafka.scan.startup.mode' = 'earliest'
 ) ROW FORMAT JSON;
 
@@ -15,7 +15,7 @@ CREATE SOURCE ad_click (
 ) WITH (
     'connector' = 'kafka',
     'kafka.topic' = 'ad_click',
-    'kafka.brokers' = 'kafka:29092',
+    'kafka.brokers' = 'localhost:9092',
     'kafka.scan.startup.mode' = 'earliest'
 ) ROW FORMAT JSON;
 
